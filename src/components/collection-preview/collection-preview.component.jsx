@@ -13,7 +13,8 @@ const CollectionPreview = ({title, items}) => {
             
             <div className="preview">
                 {
-                    // map through items, & filter it's data so its < 4
+                    // map through items, & filter it's data so there's 
+                    // only < 4 items in a row
                     items
                         .filter((item, index) => index < 4)
                         .map(({id, ...otherItemProps}) => ( 
