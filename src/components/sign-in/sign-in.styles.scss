@@ -1,6 +1,6 @@
 .sign-in{
-    // 30% of total view width
-    width: 30vw;
+    
+    width: 35vw;
     padding: 25px 60px;
     display:flex;
     flex-direction:column;
@@ -8,5 +8,12 @@
 
     .title{
         margin:20px 0;
+    }
+
+    .buttons
+    {
+     display:flex;
+     justify-content: space-between;
+   
     }
 }

@@ -21,7 +21,7 @@ const MenuItem = ({ title, imageUrl, size, linkUrl }) => {
     <div
       // added a size prop from the directory component
       // so if it's present then add the style to the menu item
-      // this final piece comes together in menu-item.styles.scss
+      // this final piece comes together in menu-item.styles.scss ```
       className={`${size} menu-item`}
       onClick={routeChange}
     >
@@ -43,6 +43,7 @@ const MenuItem = ({ title, imageUrl, size, linkUrl }) => {
       </div>
     </div>
   );
+  
 };
 
 export default MenuItem;

@@ -1,20 +1,27 @@
 import React from "react";
-import './custom-button.style.scss'
+import "./custom-button.style.scss";
 
+const CustomButton = ({ children, isGoogleSignIn, ...otherProps }) => {
+  return (
+    // ************************************************
+    //  For Google Button we'd conditionally render
+    // a className based off of a prop: isGoogleSignIn
+    // Conditionally render via string Interpolation
+    // The className of googleSignIn
+    // ************************************************
 
+    // if we've got a type or whatever properties
+    // from the button, this'll
+    // receive that through the spread props
+    // ************************************************
 
-const CustomButtom = ({ children, ...otherProps}) => {
-    return (
-        // if we've got a type or whatever properties
-        // from the input, this button'll 
-        // receieve that through the spred props
+    <button
+      className={`${isGoogleSignIn ? 'google-sign-in' : ''} custom-button`}
+      {...otherProps}
+    >
+      {children}
+    </button>
+  );
+};
 
-        <button className="custom-button" {...otherProps}>
-        
-            {children}
-
-        </button>
-    )
-}
-
-export default CustomButtom;
+export default CustomButton;

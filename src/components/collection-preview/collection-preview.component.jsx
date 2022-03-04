@@ -1,6 +1,7 @@
 import React from "react";
 import CollectionItem from "../collection-item/collection-item.component";
 import './collection-preview-styles.scss';
+// import CustomButton from "../custom-button/custom-button.component";
 
 
 // functional component
@@ -15,9 +16,11 @@ const CollectionPreview = ({title, items}) => {
                 {
                     // map through items, & filter it's data so there's 
                     // only < 4 items in a row
-                    items
+                items
                         .filter((item, index) => index < 4)
                         .map(({id, ...otherItemProps}) => ( 
+
+
                         <CollectionItem  key={id} {...otherItemProps} />
                                 
                                 
