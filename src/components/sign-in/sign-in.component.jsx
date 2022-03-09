@@ -4,7 +4,7 @@ import { Component } from "react";
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-import { signInWithGoogle } from '../../firebase/firebase.utils'
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils'
 
 
 
@@ -27,15 +27,39 @@ class SignIn extends Component{
 
 
     
-    handleSubmit = event => {
+    handleSubmit = async event => {
         // when submit's clicked 
         // prevent def. action
         // we want full CTRL ovr 
         // what the submit does
         event.preventDefault();
+      
+        // destructure our E&P from our State
+
+        const {email, password } = this.state; 
+
+        // Try Block Await for Auth
+
+        try{
+
+          await auth.signInWithEmailAndPassword(
+            email,
+            password,
+          );
+
+          // if the above succeeds then we'd clear our state.
+          this.setState({ email: '', password: '' })
+
+
+
+        }catch(error){
+          console.log(error);
+        }
+
         
-        this.setState({ email: '', password: '' })
-        
+      
+
+
         
     }
  
