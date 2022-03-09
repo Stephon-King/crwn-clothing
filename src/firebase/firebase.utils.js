@@ -12,7 +12,54 @@ const config= {
     appId: "1:323502565708:web:c1fd3dfe9f0b64e78a07e9",
     measurementId: "G-T8FYY96RE7"
 }
+// go over this tutorial and take notes
   
+// async action
+    export const createUserProfileDocument = async ( userAuth, additionalData ) => {
+
+        if ( !userAuth )  return;
+        
+        // Query inside of Firestore for the doc, if it 
+        // already exists
+        
+        // documentRef Object: Useful for CRUD Operations
+        const userRef = firestore.doc(`users/${userAuth.uid}`);
+
+        // snapShotObject references the Data
+        const snapShot = await userRef.get();
+        
+        if(!snapShot.exists)
+        {
+          // doesn't exist, then create it
+          // data to create the document
+          const { displayName, email } = userAuth;
+
+          // we want to know when the object was created in
+          // the DB. Getting current date & current time
+          // twas created
+          const createdAt = new Date();
+
+          // wrap the async request in try-catch-block
+          // Send an Auth Object (Specific Properties) to
+          // Firestore DB
+          try {
+            // .set({}) is the CREATE method in CRUD.
+            await userRef.set({
+              // pass in object properties
+              displayName,
+              email,
+              createdAt,
+              ...additionalData,
+            });
+          } catch (error) {
+            console.log("error creating user", error.message);
+          }
+        }
+        return userRef;
+
+    }
+
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();

@@ -4,7 +4,7 @@ import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/sign-In-and-sign-up/sign-In-and-sign-up.component";
 import Header from "./components/header/header.component";
-import { auth } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 import { Component } from "react";
 
 // store the login state for either E&P or GoogleAuth
@@ -19,15 +19,14 @@ class App extends Component {
     };
   }
 
-  // we need to have a CLOSE_SUBSCRIPTION 
+  // we need to have a CLOSE_SUBSCRIPTION
   // to prevent memory leaks
   // this gives us back a function that when
   // we call closes the subscription
   unsubscribeFromAuth = null;
 
-  componentDidMount()
-  { 
-    //onAuthStateChanged is an OPEN_SUBSCRIPTION 
+  componentDidMount() {
+    //onAuthStateChanged is an OPEN_SUBSCRIPTION
     // which is notified of any changes
     // happening on Firebase's side from
     // any source related to our app.
@@ -40,22 +39,49 @@ class App extends Component {
     //if  that state is changed
     // this connection's always opened as long as
     // our App Component is mounted on  our DOM.
-    
-    // but becuz its an OPEN_SUBSCRIPTION we'd also need to 
+
+    // but becuz its an OPEN_SUBSCRIPTION we'd also need to
     // CLOSE_SUBSCRIPTION once this subscription unmounts
 
- 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(( user ) => {
-      this.setState({ currentUser: user });
+    // onAuthStateChanged is now checking to see if the snapShot's Changed.
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+      if (userAuth ) {
+        const userRef = await createUserProfileDocument(userAuth);
 
-      console.log(user);
+        userRef.onSnapshot(snapShot => {
+          // After console.logging the snapShot
+          // we got everything beside the data.
+          // calling on snapShot.data() returned
+          // all the data beside ID, whilst ID  was
+          // present on snapShot's log.
+
+          // we need to use both of them to setState
+          
+          this.setState(
+            {
+              currentUser: {
+                id: snapShot.id,
+                ...snapShot.data(),
+              },
+            });
+          
+            console.table(this.state);
+          
+        });
+      
+      }else{
+        
+        // if userAuth returns null do:
+        this.setState({ currentUser:userAuth });
+      }
+      
+      
     });
   }
 
-  componentWillUnmount()
-  {
-    // calling this closes the 
-    // subscription, so there's no memory leaks 
+  componentWillUnmount() {
+    // calling this closes the
+    // subscription, so there's no memory leaks
     this.unsubscribeFromAuth();
   }
 
@@ -64,9 +90,10 @@ class App extends Component {
   render() {
     return (
       <div>
+
         <Header
-        // have to ensure our header 
-        // knows when a user's : signedIn || signedOut
+          // have to ensure our header
+          // knows when a user's : signedIn || signedOut
 
           currentUser={this.state.currentUser}
         />
@@ -76,7 +103,9 @@ class App extends Component {
           <Route path="/shoppage" element={<ShopPage />} />
           <Route path="/signin" element={<SignInAndSignUpPage />} />
         </Routes>
+
       </div>
+
     );
   }
 }
